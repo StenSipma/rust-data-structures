@@ -3,16 +3,21 @@ pub mod priority_queue {
 
     /// Priority queue, with increasing order based on a linked list
     pub struct PriorityQueue<T> {
-        list: LinkedList<T>
+        list: LinkedList<T>,
     }
 
-    impl<T> PriorityQueue<T> where T: Copy + PartialOrd {
+    impl<T> PriorityQueue<T>
+    where
+        T: Copy + PartialOrd,
+    {
         pub fn new() -> Self {
-            Self{list:LinkedList::new()}
+            Self {
+                list: LinkedList::new(),
+            }
         }
 
-        /// Add data (in increasing order) to the priority queue. 
-        /// 
+        /// Add data (in increasing order) to the priority queue.
+        ///
         /// ```
         /// let mut queue = data_structures::queues::priority_queue::PriorityQueue::new();
         /// queue.insert(1);
@@ -28,7 +33,7 @@ pub mod priority_queue {
         /// Remove data in increasing order from the queue
         ///
         /// When the queue is empty, None is returned.
-        /// 
+        ///
         /// ```
         /// let mut queue = data_structures::queues::priority_queue::PriorityQueue::new();
         /// queue.insert(1);
@@ -45,7 +50,10 @@ pub mod priority_queue {
         }
     }
 
-    impl<T> Iterator for PriorityQueue<T> where T: Copy + PartialOrd {
+    impl<T> Iterator for PriorityQueue<T>
+    where
+        T: Copy + PartialOrd,
+    {
         type Item = T;
 
         fn next(&mut self) -> Option<Self::Item> {
@@ -103,10 +111,10 @@ pub mod queue {
     const DEFAULT_INIT_QUEUE_CAPACITY: usize = 32;
 
     #[derive(Debug)]
-    pub struct Queue<T>{
+    pub struct Queue<T> {
         list: Vec<T>,
         head: usize,
-        tail: usize
+        tail: usize,
     }
 
     impl<T> Queue<T> {
@@ -119,7 +127,11 @@ pub mod queue {
         /// This is mostly useful if you know for certain the queue is going to
         /// get large, or remain (very) small.
         pub fn with_capacity(capacity: usize) -> Self {
-            Self { list: Vec::with_capacity(capacity), head: 0, tail: 0 }
+            Self {
+                list: Vec::with_capacity(capacity),
+                head: 0,
+                tail: 0,
+            }
         }
 
         /// Adds an item to the queue (FIFO)
@@ -228,7 +240,7 @@ pub mod queue {
         /// from the old list into it.
         fn resize(&mut self) {
             // make new vector with twice the capacity
-            let mut new_list = Vec::with_capacity(self.list.capacity()*2);
+            let mut new_list = Vec::with_capacity(self.list.capacity() * 2);
             // move items into this vector
             if self.head <= self.tail {
                 for i in self.list.drain(self.head..self.tail) {
@@ -317,7 +329,7 @@ pub mod queue {
             let mut q: Queue<i32> = Queue::new();
             assert_eq!(q.list.capacity(), DEFAULT_INIT_QUEUE_CAPACITY);
             q.resize();
-            assert_eq!(q.list.capacity(), DEFAULT_INIT_QUEUE_CAPACITY*2);
+            assert_eq!(q.list.capacity(), DEFAULT_INIT_QUEUE_CAPACITY * 2);
             assert_eq!(q.head, 0);
             assert_eq!(q.tail, 0);
         }
@@ -328,7 +340,7 @@ pub mod queue {
             assert_eq!(q.list.capacity(), DEFAULT_INIT_QUEUE_CAPACITY);
             q.enqueue(1);
             q.resize();
-            assert_eq!(q.list.capacity(), DEFAULT_INIT_QUEUE_CAPACITY*2);
+            assert_eq!(q.list.capacity(), DEFAULT_INIT_QUEUE_CAPACITY * 2);
             assert_eq!(q.head, 0);
             assert_eq!(q.tail, 1);
         }
@@ -364,7 +376,7 @@ pub mod queue {
             q.enqueue(2);
             assert_eq!(q.dequeue(), Some(1));
             assert_eq!(q.dequeue(), Some(2));
-            q.enqueue(3); 
+            q.enqueue(3);
             q.enqueue(4);
             q.enqueue(5); // resize here
             q.enqueue(6);

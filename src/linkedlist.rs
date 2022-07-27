@@ -2,7 +2,10 @@
 #[derive(Clone)]
 pub struct LinkedList<T>(pub(super) Option<(T, Box<LinkedList<T>>)>);
 
-impl<T> LinkedList<T> where T: Copy {
+impl<T> LinkedList<T>
+where
+    T: Copy,
+{
     pub fn new() -> Self {
         Self(None)
     }
@@ -18,7 +21,7 @@ impl<T> LinkedList<T> where T: Copy {
     pub fn append(&mut self, data: T) {
         match self.0 {
             Some(ref mut ll) => ll.1.append(data),
-            None => self.0 = Some((data, Box::new(LinkedList::new())))
+            None => self.0 = Some((data, Box::new(LinkedList::new()))),
         };
     }
 
@@ -99,7 +102,7 @@ impl<T> LinkedList<T> where T: Copy {
             None => self.append(data),
             Some((_, ref mut child)) => {
                 if n > 0 {
-                    child.insert(data, n-1);
+                    child.insert(data, n - 1);
                 } else {
                     self.insert_here(data)
                 }
@@ -107,7 +110,7 @@ impl<T> LinkedList<T> where T: Copy {
         }
     }
 
-    pub (super) fn insert_here(&mut self, data: T) {
+    pub(super) fn insert_here(&mut self, data: T) {
         // let next = self;
         let mut new = LinkedList::new();
         new.append(data);
@@ -117,7 +120,10 @@ impl<T> LinkedList<T> where T: Copy {
         child.1 = Box::new(new)
     }
 
-    fn from_helper<I>(&mut self, iter: &mut I) where I: Iterator<Item=T> {
+    fn from_helper<I>(&mut self, iter: &mut I)
+    where
+        I: Iterator<Item = T>,
+    {
         match iter.next() {
             None => return,
             Some(item) => {
@@ -128,19 +134,24 @@ impl<T> LinkedList<T> where T: Copy {
     }
 }
 
-impl<T> FromIterator<T> for LinkedList<T> where T: Copy {
-    fn from_iter<I>(list: I) -> Self 
-    where 
-        I: std::iter::IntoIterator<Item = T> 
+impl<T> FromIterator<T> for LinkedList<T>
+where
+    T: Copy,
+{
+    fn from_iter<I>(list: I) -> Self
+    where
+        I: std::iter::IntoIterator<Item = T>,
     {
         let mut ll = LinkedList::new();
         ll.from_helper(&mut list.into_iter());
         ll
     }
-
 }
 
-impl<T> Iterator for LinkedList<T> where T: Copy {
+impl<T> Iterator for LinkedList<T>
+where
+    T: Copy,
+{
     type Item = T;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -170,7 +181,7 @@ mod tests {
         assert!(ll.0.is_some());
         let child = ll.0.unwrap();
         assert_eq!(child.0, 1);
-        assert!(child.1.0.is_none());
+        assert!(child.1 .0.is_none());
     }
 
     #[test]
@@ -180,22 +191,22 @@ mod tests {
         assert!(ll.0.is_some());
         let child = ll.0.unwrap();
         assert_eq!(child.0, "abc");
-        assert!(child.1.0.is_none());
+        assert!(child.1 .0.is_none());
     }
 
     #[test]
     fn pop_test() {
-       let mut ll = LinkedList::new();
-       ll.push(1);
-       ll.push(2);
+        let mut ll = LinkedList::new();
+        ll.push(1);
+        ll.push(2);
 
-       assert_eq!(ll.pop(), Some(2));
-       assert_eq!(ll.pop(), Some(1));
-       assert_eq!(ll.pop(), None);
-       assert_eq!(ll.pop(), None);
+        assert_eq!(ll.pop(), Some(2));
+        assert_eq!(ll.pop(), Some(1));
+        assert_eq!(ll.pop(), None);
+        assert_eq!(ll.pop(), None);
 
-       ll.append(5);
-       assert_eq!(ll.pop(), Some(5));
+        ll.append(5);
+        assert_eq!(ll.pop(), Some(5));
     }
 
     #[test]
@@ -243,7 +254,7 @@ mod tests {
     #[test]
     fn from_map_test() {
         let lst = vec![1, 2, 3, 4];
-        let mut ll: LinkedList<i32> = lst.into_iter().map(|x| { x*x }).collect();
+        let mut ll: LinkedList<i32> = lst.into_iter().map(|x| x * x).collect();
         assert_eq!(ll.pop(), Some(1));
         assert_eq!(ll.pop(), Some(4));
         assert_eq!(ll.pop(), Some(9));
@@ -275,7 +286,6 @@ mod tests {
         assert_eq!(vec, vec![0, 1, 2, 3, 4]);
     }
 }
-
 
 /// The Stack LIFO data structure.
 ///
